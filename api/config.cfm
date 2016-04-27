@@ -1,7 +1,7 @@
 <cfsilent>
 
 <cflock name="CF_CONFIGMANAGER_CONFIG" type="exclusive" timeout="60" throwontimeout="true">
-
+<cfset verb = cgi.request_method />
 <cfloop collection="#jsonData#" item="objName">
     <cftry>
         <!--- for each key in the adminSettings struct, try to initilize the coresponding admin api component --->
@@ -24,8 +24,23 @@
                 <cfset invocations = adminObj[setter] />
 
                 <cfloop array="#invocations#" index="args">
-                    <cfinvoke component="#adminComponent#" method="set#setter#" argumentCollection="#args#" />
-                    <cfset logInfo("Invoked #objName#.set#setter#. Arguments: #serializeJSON(args)#.") />
+                    <cfswitch expression="#verb#">
+						<cfcase value="post">					
+							<cfinvoke component="#adminComponent#" method="set#setter#" argumentCollection="#args#" />
+							<cfset logInfo("Invoked #objName#.set#setter#. Arguments: #serializeJSON(args)#.") />
+						</cfcase>
+						<cfcase value="delete">
+							<cfif StructKeyExists(#adminComponent#, "delete") >
+								<cfinvoke component="#adminComponent#" method="delete" argumentCollection="#args#" />
+								<cfset logInfo("Invoked #objName#.delete. Arguments: #serializeJSON(args)#.") />
+							<cfelse>
+								<cfset logError("Error invoking #objName#.delete. Method does not have a delete command") />
+								<cfheader statuscode="500" statustext="Error invoking #objName#.delete. Method does not have a delete command" />
+								<cfabort />
+							</cfif>
+						</cfcase>
+					</cfswitch>
+                    
                 </cfloop>
 
                 <cfcatch type="any">

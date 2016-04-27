@@ -1,6 +1,17 @@
 <cfcomponent extends="CFIDE.adminapi.datasource">
 
-
+	 <cffunction name="delete">
+		<cfset var savedConfigHash = getConfigHash(arguments.name) />
+		<cfset var newConfigHash = hashArgs(arguments) />
+		<cfset var datasources = getDatasources() />
+		
+		<cfif not structKeyExists(datasources,name)>
+			<cfreturn />
+		<cfelse>
+			<cfset super.deleteDatasource(arguments.name) />
+			<cfset logInfo("Datasource #arguments.name# deleted. ") />
+		</cfif>
+	 </cffunction>
 	 <cffunction name="setDB2">
 
 		<cfset var savedConfigHash = getConfigHash(arguments.name) />
