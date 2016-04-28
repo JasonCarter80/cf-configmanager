@@ -57,33 +57,34 @@ You can also call multiple admin components as in the following example.
         }
     }
 
+### Data Sources
 
-For data sources, you can now utilize call the DELETE method to remove a data source, passing in the same structure for POST
 
 To Create data source:   HTTP Method: POST
-{
-		"datasource": {
-			"MSSql": [{
-				"name": "DBA",
-				"host": "serverName",
-				"database": "DBA",
-				"username": "username",
-				"password": "password",
-				"sendStringParametersAsUnicode": true,
-				"disable_clob": false,
-				"disable_blob": false
-			}]
-	}
-}
+
+    {
+    	"datasource": {
+    		"MSSql": [{
+    			"name": "DBA",
+    			"host": "serverName",
+    			"database": "DBA",
+    			"username": "username",
+    			"password": "password",
+    			"sendStringParametersAsUnicode": true,
+    			"disable_clob": false,
+    			"disable_blob": false
+    		}]
+        }
+    }
 
 To Remove data source:   HTTP Method: DELETE
-{
-		"datasource": {
-			"MSSql": [{
-				"name": "DBA"
-			}]
-	}
-}
+    {
+    	"datasource": {
+    		"MSSql": [{
+    			"name": "DBA"
+    		}]
+		}
+    }
 
 
 *NOTE:* The remote API relies on basic authenication, and as such should be accessed via HTTPS. 
